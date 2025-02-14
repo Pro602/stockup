@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตารางสินค้า - เลือกตามหมวดหมู่</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f4f4f4;
+        }
+        h2 {
+            color: #333;
+        }
+        select {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .table-container {
+            width: 90%;
+            margin: auto;
+            overflow-x: auto; /* ทำให้ตารางเลื่อนได้ */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left; /* ชิดซ้าย */
+        }
+        th {
+            background: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        /* ทำให้รองรับมือถือ */
+        @media screen and (max-width: 600px) {
+            table {
+                font-size: 14px;
+            }
+            select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2 style="font-size: 28px; color: #007BFF; font-weight: bold;">STOCK ON HAND</h2>
+
+    <div style="display: flex; flex-direction: column; align-items: start; padding-left: 5%;">
+        <label for="categorySelect" style="font-size: 16px; font-weight: bold; color: #333;">เลือกหมวดหมู่สินค้า</label>
+        <select id="categorySelect">
+            <option value="">-- เลือกหมวดหมู่ --</option>
+        </select>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>รหัสสินค้า</th>
+                    <th>ชื่อสินค้า</th>
+                    <th>จำนวน</th>
+                </tr>
+            </thead>
+            <tbody id="productTable">
+                <!-- ข้อมูลจะแสดงที่นี่ -->
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <script>
+        const sheetID = "1l1exJIhymKc3MaaYwnV6UKWP39Na3t_Y_ZYNvAW0FKY";
+        const sheetName = "Stock"; 
+        const apiUrl = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
+
+        let dataStore = []; // เก็บข้อมูลจาก API
+
+        function loadSheetData() {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("📌 ข้อมูลที่ได้จาก API:", data);
+                    dataStore = data; // บันทึกข้อมูลไว้ใช้ต่อ
+
+                    const categorySelect = document.getElementById("categorySelect");
+                    categorySelect.innerHTML = `<option value="">-- เลือกหมวดหมู่ --</option>`; // ล้างค่าเก่าก่อน
+                    const categories = [...new Set(data.map(row => row["Category"]))]; // หาหมวดหมู่ที่ไม่ซ้ำกัน
+                    
+                    categories.forEach(category => {
+                        let option = document.createElement("option");
+                        option.value = category;
+                        option.textContent = category;
+                        categorySelect.appendChild(option);
+                    });
+
+                    categorySelect.addEventListener("change", filterByCategory);
+                })
+                .catch(error => console.error("🚨 โหลดข้อมูลไม่ได้:", error));
+        }
+
+        function filterByCategory() {
+            const selectedCategory = document.getElementById("categorySelect").value;
+            const tableBody = document.getElementById("productTable");
+            tableBody.innerHTML = ""; // ล้างข้อมูลก่อนแสดงผลใหม่
+
+            const filteredData = dataStore.filter(row => row["Category"] === selectedCategory);
+            
+            filteredData.forEach(row => {
+                let tableRow = `<tr>
+                    <td>${row["prodcode"]}</td>
+                    <td>${row["prodname"]}</td>
+                    <td>${row["qty"]}</td>
+                </tr>`;
+                tableBody.innerHTML += tableRow;
+            });
+        }
+
+        // โหลดข้อมูลครั้งแรก
+        loadSheetData();
+
+        // อัปเดตข้อมูลอัตโนมัติทุก 30 วินาที
+        setInterval(loadSheetData, 30000);
+    </script>
+
+</body>
+</html>
