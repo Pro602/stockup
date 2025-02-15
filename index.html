@@ -8,21 +8,46 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background: #f4f4f4;
+            background: linear-gradient(120deg, #a8edea, #fed6e3);
+            padding: 20px;
         }
         h2 {
-            color: #333;
+            color: #007BFF; /* สีน้ำเงิน */
+            font-size: 60px; /* ขนาดใหญ่ขึ้น */
+            font-weight: bold; /* หนาขึ้น */
         }
-        select {
-            padding: 10px;
-            margin: 10px;
+        .filter-container {
+            display: flex;
+            justify-content: space-between; /* จัดระยะห่างระหว่าง 2 select box */
+            align-items: center;
+            margin-bottom: 20px;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .filter-container label {
+            font-size: 20px; /* ขนาดใหญ่ขึ้น */
+            font-weight: bold;
+            color: #007BFF; /* สีน้ำเงิน */
+            margin-bottom: 5px;
+        }
+        .filter-container select {
+            padding: 12px;
             font-size: 16px;
-            border-radius: 5px;
+            border-radius: 8px;
+            border: 1px solid #bbb;
+            background: #fff;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            width: 48%; /* ขนาดของ select box แต่ละตัว */
+        }
+        .filter-container select:hover {
+            background: #f0f8ff;
         }
         .table-container {
-            width: 90%;
+            width: 100%;
+            max-width: 800px;
             margin: auto;
-            overflow-x: auto; /* ทำให้ตารางเลื่อนได้ */
+            overflow-x: auto;
         }
         table {
             width: 100%;
@@ -32,38 +57,55 @@
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
         th, td {
-            padding: 10px;
+            padding: 12px;
             border-bottom: 1px solid #ddd;
-            text-align: left; /* ชิดซ้าย */
+            text-align: left;
         }
         th {
-            background: #007BFF;
+            background: #4CAF50;
             color: white;
         }
         tr:nth-child(even) {
             background: #f9f9f9;
         }
-        
-        /* ทำให้รองรับมือถือ */
+        tr:hover {
+            background: #c3e6cb !important;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
         @media screen and (max-width: 600px) {
             table {
                 font-size: 14px;
             }
-            select {
+            .filter-container {
+                flex-direction: column; /* แสดงในรูปแบบแนวตั้งเมื่อขนาดหน้าจอเล็ก */
+                align-items: center;
+            }
+            .filter-container select {
                 width: 100%;
+                margin-bottom: 10px;
             }
         }
     </style>
 </head>
 <body>
 
-    <h2 style="font-size: 28px; color: #007BFF; font-weight: bold;">STOCK ON HAND</h2>
+    <h2>ข้อมูลรายการสินค้าคงคลัง STOCK ON HAND</h2>
 
-    <div style="display: flex; flex-direction: column; align-items: start; padding-left: 5%;">
-        <label for="categorySelect" style="font-size: 16px; font-weight: bold; color: #333;">เลือกหมวดหมู่สินค้า</label>
-        <select id="categorySelect">
-            <option value="">-- เลือกหมวดหมู่ --</option>
-        </select>
+    <div class="filter-container">
+        <div>
+            <label for="categorySelect">เลือกหมวดหมู่สินค้า</label>
+            <select id="categorySelect">
+                <option value="">-- เลือกหมวดหมู่ --</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="typeSelect">เลือกประเภทสินค้า</label>
+            <select id="typeSelect">
+                <option value="">-- เลือกประเภท --</option>
+            </select>
+        </div>
     </div>
 
     <div class="table-container">
@@ -81,26 +123,24 @@
         </table>
     </div>
 
-
-
     <script>
         const sheetID = "1l1exJIhymKc3MaaYwnV6UKWP39Na3t_Y_ZYNvAW0FKY";
-        const sheetName = "Stock"; 
+        const sheetName = "Stock";
         const apiUrl = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
 
-        let dataStore = []; // เก็บข้อมูลจาก API
+        let dataStore = []; 
 
         function loadSheetData() {
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
                     console.log("📌 ข้อมูลที่ได้จาก API:", data);
-                    dataStore = data; // บันทึกข้อมูลไว้ใช้ต่อ
+                    dataStore = data;
 
                     const categorySelect = document.getElementById("categorySelect");
-                    categorySelect.innerHTML = `<option value="">-- เลือกหมวดหมู่ --</option>`; // ล้างค่าเก่าก่อน
-                    const categories = [...new Set(data.map(row => row["Category"]))]; // หาหมวดหมู่ที่ไม่ซ้ำกัน
-                    
+                    categorySelect.innerHTML = `<option value="">-- เลือกหมวดหมู่ --</option>`;
+                    const categories = [...new Set(data.map(row => row["Category"]))];
+
                     categories.forEach(category => {
                         let option = document.createElement("option");
                         option.value = category;
@@ -108,32 +148,73 @@
                         categorySelect.appendChild(option);
                     });
 
-                    categorySelect.addEventListener("change", filterByCategory);
+                    categorySelect.addEventListener("change", updateTypeDropdown);
+                    
+                    // แสดงข้อมูลทั้งหมดเมื่อโหลดครั้งแรก
+                    filterByCategoryAndType();
                 })
                 .catch(error => console.error("🚨 โหลดข้อมูลไม่ได้:", error));
         }
 
-        function filterByCategory() {
+        function updateTypeDropdown() {
             const selectedCategory = document.getElementById("categorySelect").value;
-            const tableBody = document.getElementById("productTable");
-            tableBody.innerHTML = ""; // ล้างข้อมูลก่อนแสดงผลใหม่
+            const typeSelect = document.getElementById("typeSelect");
 
-            const filteredData = dataStore.filter(row => row["Category"] === selectedCategory);
-            
+            typeSelect.innerHTML = `<option value="">-- เลือกประเภท --</option>`;
+
+            if (selectedCategory) {
+                const filteredTypes = [...new Set(dataStore
+                    .filter(row => row["Category"] === selectedCategory)
+                    .map(row => row["ประเภท"]))];
+
+                filteredTypes.forEach(type => {
+                    let option = document.createElement("option");
+                    option.value = type;
+                    option.textContent = type;
+                    typeSelect.appendChild(option);
+                });
+            }
+
+            typeSelect.addEventListener("change", filterByCategoryAndType);
+
+            filterByCategoryAndType();
+        }
+
+        function filterByCategoryAndType() {
+            const selectedCategory = document.getElementById("categorySelect").value;
+            const selectedType = document.getElementById("typeSelect").value;
+            const tableBody = document.getElementById("productTable");
+            tableBody.innerHTML = "";
+
+            let filteredData = dataStore;
+
+            if (selectedCategory) {
+                filteredData = filteredData.filter(row => row["Category"] === selectedCategory);
+            }
+
+            if (selectedType) {
+                filteredData = filteredData.filter(row => row["ประเภท"] === selectedType);
+            }
+
             filteredData.forEach(row => {
-                let tableRow = `<tr>
+                let tableRow = document.createElement("tr");
+                tableRow.innerHTML = `
                     <td>${row["prodcode"]}</td>
                     <td>${row["prodname"]}</td>
                     <td>${row["qty"]}</td>
-                </tr>`;
-                tableBody.innerHTML += tableRow;
+                `;
+                tableRow.addEventListener("click", () => selectRow(tableRow));
+                tableBody.appendChild(tableRow);
             });
         }
 
-        // โหลดข้อมูลครั้งแรก
+        function selectRow(row) {
+            document.querySelectorAll("#productTable tr").forEach(tr => tr.classList.remove("selected"));
+            row.classList.add("selected");
+        }
+
         loadSheetData();
 
-        // อัปเดตข้อมูลอัตโนมัติทุก 30 วินาที
         setInterval(loadSheetData, 30000);
     </script>
 
