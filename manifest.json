@@ -1,36 +1,21 @@
-{
-  "name": "Stock On Hand",
-<<<<<<< HEAD
-  "short_name": "StockApp",
-  "description": "แอปสำหรับการดูสต็อกสินค้า",
-  "start_url": "/",
-  "display": "standalone",
-=======
-  "short_name": "Stock App",
-  "description": "แอปสำหรับการดูสต็อกสินค้า",
-  "start_url": "/",
-  "display": "standalone",  // เพื่อให้แอปทำงานเหมือนแอป
->>>>>>> cef7850 (เพิ่มไฟล์ index.html และ manifest.json)
-  "background_color": "#ffffff",
-  "theme_color": "#007BFF",
-  "icons": [
-    {
-<<<<<<< HEAD
-      "src": "/images/icon-192x192.png",
-=======
-      "src": "/path/to/icon.png",
->>>>>>> cef7850 (เพิ่มไฟล์ index.html และ manifest.json)
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-<<<<<<< HEAD
-      "src": "/images/icon-512x512.png",
-=======
-      "src": "/path/to/icon.png",
->>>>>>> cef7850 (เพิ่มไฟล์ index.html และ manifest.json)
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+﻿{
+    "name": "Stock On Hand",
+    "short_name": "StockApp",
+    "description": "แอปสำหรับการดูสต็อกสินค้า",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#007BFF",
+    "icons": [
+        {
+            "src": "/images/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
 }
