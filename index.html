@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="th">
-﻿<head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ตารางสินค้า - เลือกตามหมวดหมู่</title>
+
     <!-- เชื่อมโยงกับ manifest.json -->
-<link rel="manifest" href="/stockup/manifest.json">
+    <link rel="manifest" href="/manifest.json">
+
     <!-- เชื่อมโยงกับ favicon -->
- <link rel="icon" type="image/png" href="/stockup/favicon.ico">
+    <link rel="icon" href="favicon.ico?v=2">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,23 +19,22 @@
             padding: 20px;
         }
         h2 {
-            color: #007BFF; /* สีน้ำเงิน */
-            font-size: 60px; /* ขนาดใหญ่ขึ้น */
-            font-weight: bold; /* หนาขึ้น */
+            color: #007BFF;
+            font-size: 60px;
+            font-weight: bold;
+        }
+        #lastUpdated {
+            font-size: 16px;
+            font-weight: bold;
+            color: #FF5733;
         }
         .filter-container {
             display: flex;
-            justify-content: space-between; /* จัดระยะห่างระหว่าง 2 select box */
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
             padding-left: 5%;
             padding-right: 5%;
-        }
-        .filter-container label {
-            font-size: 20px; /* ขนาดใหญ่ขึ้น */
-            font-weight: bold;
-            color: #007BFF; /* สีน้ำเงิน */
-            margin-bottom: 5px;
         }
         .filter-container select {
             padding: 12px;
@@ -41,11 +43,7 @@
             border: 1px solid #bbb;
             background: #fff;
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            width: 48%; /* ขนาดของ select box แต่ละตัว */
-        }
-        .filter-container select:hover {
-            background: #f0f8ff;
+            width: 48%;
         }
         .table-container {
             width: 100%;
@@ -78,11 +76,8 @@
             transition: 0.3s ease-in-out;
         }
         @media screen and (max-width: 600px) {
-            table {
-                font-size: 14px;
-            }
             .filter-container {
-                flex-direction: column; /* แสดงในรูปแบบแนวตั้งเมื่อขนาดหน้าจอเล็ก */
+                flex-direction: column;
                 align-items: center;
             }
             .filter-container select {
@@ -95,6 +90,7 @@
 <body>
 
     <h2>ข้อมูลรายการสินค้าคงคลัง STOCK ON HAND</h2>
+    <p id="lastUpdated">อัปเดตล่าสุด: กำลังโหลด...</p>
 
     <div class="filter-container">
         <div>
@@ -103,7 +99,6 @@
                 <option value="">-- เลือกหมวดหมู่ --</option>
             </select>
         </div>
-
         <div>
             <label for="typeSelect">เลือกประเภทสินค้า</label>
             <select id="typeSelect">
@@ -132,13 +127,26 @@
         const sheetName = "Stock";
         const apiUrl = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
 
-        let dataStore = []; 
+        let dataStore = [];
+        let previousData = null; // ใช้เก็บข้อมูลเดิม
+        let lastUpdatedTime = new Date().toLocaleString(); // เวลาครั้งแรก
 
         function loadSheetData() {
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
                     console.log("📌 ข้อมูลที่ได้จาก API:", data);
+
+                    // ตรวจสอบว่าข้อมูลเปลี่ยนแปลงหรือไม่
+                    const dataChanged = JSON.stringify(data) !== JSON.stringify(previousData);
+
+                    if (dataChanged) {
+                        lastUpdatedTime = new Date().toLocaleString(); // อัปเดตเวลา
+                        previousData = data; // อัปเดตข้อมูลเดิมเป็นข้อมูลใหม่
+                    }
+
+                    document.getElementById("lastUpdated").textContent = `อัปเดตล่าสุด: ${lastUpdatedTime}`;
+
                     dataStore = data;
 
                     const categorySelect = document.getElementById("categorySelect");
@@ -153,11 +161,12 @@
                     });
 
                     categorySelect.addEventListener("change", updateTypeDropdown);
-                    
-                    // แสดงข้อมูลทั้งหมดเมื่อโหลดครั้งแรก
                     filterByCategoryAndType();
                 })
-                .catch(error => console.error("🚨 โหลดข้อมูลไม่ได้:", error));
+                .catch(error => {
+                    console.error("🚨 โหลดข้อมูลไม่ได้:", error);
+                    document.getElementById("lastUpdated").textContent = "อัปเดตล่าสุด: โหลดข้อมูลไม่สำเร็จ";
+                });
         }
 
         function updateTypeDropdown() {
@@ -180,7 +189,6 @@
             }
 
             typeSelect.addEventListener("change", filterByCategoryAndType);
-
             filterByCategoryAndType();
         }
 
@@ -207,19 +215,12 @@
                     <td>${row["prodname"]}</td>
                     <td>${row["qty"]}</td>
                 `;
-                tableRow.addEventListener("click", () => selectRow(tableRow));
                 tableBody.appendChild(tableRow);
             });
         }
 
-        function selectRow(row) {
-            document.querySelectorAll("#productTable tr").forEach(tr => tr.classList.remove("selected"));
-            row.classList.add("selected");
-        }
-
         loadSheetData();
-
-        setInterval(loadSheetData, 30000);
+        setInterval(loadSheetData, 30000); // โหลดซ้ำทุก 30 วินาที
     </script>
 
 </body>
