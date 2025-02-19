@@ -2,18 +2,18 @@
   "name": "Stock On Hand",
   "short_name": "StockApp",
   "description": "แอปสำหรับการดูสต็อกสินค้า",
-  "start_url": "./",
+  "start_url": "/stockup/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007BFF",
   "icons": [
     {
-      "src": "./images/icon-192x192.png",
+      "src": "https://pro602.github.io/stockup/images/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "./images/icon-512x512.png",
+      "src": "https://pro602.github.io/stockup/images/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
