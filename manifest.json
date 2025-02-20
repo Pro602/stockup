@@ -1,6 +1,6 @@
 {
   "name": "Stock On Hand",
-  "short_name": "StockApp",
+  "short_name": "TS-Stock",
   "description": "แอปสำหรับการดูสต็อกสินค้า",
   "start_url": "/stockup/",
   "display": "standalone",
