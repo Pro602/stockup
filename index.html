@@ -27,30 +27,26 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
-    <style>
-    /* //ไฮไล์ row table */
-        table.dataTable tbody tr:hover {
-            background-color: #77fd29 !important;
-            cursor: pointer;
-        }
-.logo {
-            width: 70px;  /* ปรับขนาด */
-            height: auto;  /* ให้ปรับตามสัดส่วน */
-            display: inline-block;
-        }
+    <!-- Font Awesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 
+    <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             background: linear-gradient(120deg, #a8edea, #fed6e3);
             padding: 20px;
+            margin: 0;
         }
+        /* ปรับปรุง h2 */
         
         h2 {
             color: #007BFF;
             font-size: 30px;
             font-weight: bold;
+            margin-bottom: 15px;
         }
+        /* คอนเทนเนอร์สำหรับฟิลเตอร์ */
         
         .filter-container {
             display: flex;
@@ -59,6 +55,7 @@
             gap: 10px;
             margin-bottom: 15px;
         }
+        /* สไตล์ของ select */
         
         select {
             padding: 10px;
@@ -67,17 +64,24 @@
             border: 1px solid #bbb;
             background: #fff;
             width: 200px;
+            cursor: pointer;
         }
+        /* ปรับแต่งตาราง */
         
         table {
             width: 100%;
             margin-top: 10px;
+            border-collapse: collapse;
         }
+        /* หัวตาราง */
         
         th {
             background: #4CAF50;
             color: white;
+            padding: 12px;
+            text-align: left;
         }
+        /* ช่องข้อมูล */
         
         th,
         td {
@@ -85,24 +89,59 @@
             border: 1px solid #ddd;
             text-align: left;
         }
+        /* ปรับแต่งปุ่ม DataTables */
         
         .dt-buttons {
             margin-bottom: 10px;
         }
+        /* //ไฮไล์ row table */
+        
+        table.dataTable tbody tr:hover {
+            background-color: #77fd29 !important;
+            cursor: pointer;
+        }
+        /* Responsive Design */
         
         @media (max-width: 600px) {
             select {
                 width: 100%;
             }
+            table {
+                font-size: 14px;
+            }
+            th,
+            td {
+                padding: 8px;
+            }
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            /* จัดแนวโลโก้และข้อความให้อยู่กลางแนวตั้ง */
+            justify-content: center;
+            /* จัดให้ทั้งโลโก้และข้อความอยู่กลางแนวนอน */
+            font-size: 24px;
+            /* กำหนดขนาดตัวอักษร */
+            font-weight: bold;
+            text-align: center;
+            gap: 10px;
+            /* เพิ่มระยะห่างระหว่างโลโก้กับข้อความ */
+        }
+        
+        .logo {
+            width: 80px;
+            /* ขนาดโลโก้ */
+            height: auto;
+            /* ปรับอัตโนมัติให้มีอัตราส่วนที่ถูกต้อง */
         }
     </style>
 </head>
 
 <body>
 
-<h2>
-        <img src="https://pro602.github.io/stockup/images/logo.png" class="logo" alt="Logo">
-        ข้อมูลสินค้าคงคลัง STOCK ON HAND
+    <h2 class="header">
+        <img src="https://pro602.github.io/stockup/images/logo.png" class="logo fa-bounce" alt="Logo"> ข้อมูลสินค้าคงคลัง STOCK ON HAND
     </h2>
     <p id="lastUpdated">⏳ อัปเดตล่าสุด: กำลังโหลด...</p>
 
@@ -121,6 +160,7 @@
                 <th>รหัสสินค้า</th>
                 <th>ชื่อสินค้า</th>
                 <th>จำนวน</th>
+                <th>หน่วยนับ</th>
                 <th>หมวดหมู่</th>
                 <th>ประเภท</th>
             </tr>
@@ -164,7 +204,7 @@
                     }
 
                     // แสดงวันที่และเวลาในรูปแบบ dd/mm/yyyy hh:mm:ss
-                    document.getElementById("lastUpdated").textContent = `⏳ อัปเดตข้อมูลจากFomulaล่าสุด: ${formattedDatetime}`;
+                    document.getElementById("lastUpdated").textContent = `⏳ อัปเดตข้อมูลFomulaล่าสุด: ${formattedDatetime}`;
 
                     dataStore = data;
                     updateFilters();
@@ -216,6 +256,7 @@
                     <td>${row["prodcode"]}</td>
                     <td>${row["prodname"]}</td>
                     <td>${row["qty"]}</td>
+                    <td>${row["unit"]}</td>
                     <td>${row["Category"]}</td>
                     <td>${row["ประเภท"]}</td>
                 `;
@@ -291,7 +332,7 @@
         document.getElementById("typeSelect").addEventListener("change", applyFilters);
 
         loadSheetData();
-        setInterval(loadSheetData, 30000);
+        setInterval(loadSheetData, 90000); // 90,000 มิลลิวินาที = 1 นาที 30 วินาที
     </script>
 
 </body>
