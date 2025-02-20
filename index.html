@@ -33,6 +33,11 @@
             background-color: #77fd29 !important;
             cursor: pointer;
         }
+.logo {
+            width: 120px;  /* ปรับขนาด */
+            height: auto;  /* ให้ปรับตามสัดส่วน */
+            display: inline-block;
+        }
 
         body {
             font-family: Arial, sans-serif;
@@ -95,10 +100,10 @@
 
 <body>
 
-    <h2>
-    <img src="/stockup/images/logo.png" width="40" height="40" alt="Logo">
-    ข้อมูลสินค้าคงคลัง STOCK ON HAND
-</h2>
+<h2>
+        <img src="https://pro602.github.io/stockup/images/logo.png" class="logo" alt="Logo">
+        ข้อมูลสินค้าคงคลัง STOCK ON HAND
+    </h2>
     <p id="lastUpdated">⏳ อัปเดตล่าสุด: กำลังโหลด...</p>
 
     <div class="filter-container">
