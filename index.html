@@ -42,9 +42,9 @@
         
         h2 {
             color: #007BFF;
-            font-size: 30px;
+            font-size: 42px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
         }
         /* คอนเทนเนอร์สำหรับฟิลเตอร์ */
         
@@ -136,22 +136,23 @@
             /* ปรับอัตโนมัติให้มีอัตราส่วนที่ถูกต้อง */
         }
 /* คอนเทนเนอร์สำหรับข้อความที่วิ่ง */
-        .marquee-container {
-            width: 100%;
+       .marquee-container {
+            width: 60%; /* ลดขนาดให้พอดีกับข้อความ */
             overflow: hidden;
             white-space: nowrap;
             display: flex;
-            justify-content: center; /* จัดให้อยู่ตรงกลาง */
+            justify-content: center;
             position: relative;
-            background: rgba(255, 255, 255, 0.7); /* เพิ่มพื้นหลังเล็กน้อยให้มองเห็นได้ชัด */
-            padding: 5px 0;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 5px 10px;
             border-radius: 10px;
+            margin: 10px auto; /* จัดให้อยู่ตรงกลาง */
         }
 
         /* ข้อความวิ่งจากขวามาซ้าย */
         .marquee {
             display: inline-block;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: red;
             white-space: nowrap;
