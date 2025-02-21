@@ -31,32 +31,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 
     <style>
-.marquee-container {
-    width: 100%;
-    overflow: hidden; /* ซ่อนข้อความที่อยู่นอกกรอบ */
-    white-space: nowrap; /* ไม่ให้ขึ้นบรรทัดใหม่ */
-    position: relative;
-}
-
-.marquee {
-    display: inline-block;
-    font-size: 18px;
-    font-weight: bold;
-    color: red; /* ทำให้ตัวอักษรเป็นสีแดง */
-    white-space: nowrap;
-    position: absolute;
-    right: -100%; /* เริ่มต้นอยู่นอกหน้าจอทางขวา */
-    animation: marquee 10s linear infinite;
-}
-
-@keyframes marquee {
-    from {
-        transform: translateX(100%);
-    }
-    to {
-        transform: translateX(-100%);
-    }
-
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -169,11 +143,7 @@
     <h2 class="header">
         <img src="https://pro602.github.io/stockup/images/logo.png" class="logo fa-bounce" alt="Logo"> ข้อมูลสินค้าคงคลัง STOCK ON HAND
     </h2>
-<div class="marquee-container">
-    <p id="lastUpdated" class="marquee">
-        ⏳ อัปเดตข้อมูลล่าสุด: 20/02/2025 13:24:00
-    </p>
-</div>
+    <p id="lastUpdated">⏳ อัปเดตล่าสุด: กำลังโหลด...</p>
 
     <div class="filter-container">
         <select id="categorySelect">
