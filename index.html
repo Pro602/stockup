@@ -140,18 +140,21 @@
             width: 100%;
             overflow: hidden;
             white-space: nowrap;
+            display: flex;
+            justify-content: center; /* จัดให้อยู่ตรงกลาง */
             position: relative;
+            background: rgba(255, 255, 255, 0.7); /* เพิ่มพื้นหลังเล็กน้อยให้มองเห็นได้ชัด */
+            padding: 5px 0;
+            border-radius: 10px;
         }
 
-        /* ข้อความวิ่งจากขวาไปซ้าย */
+        /* ข้อความวิ่งจากขวามาซ้าย */
         .marquee {
             display: inline-block;
             font-size: 20px;
             font-weight: bold;
-            color: red; /* ทำให้ตัวอักษรเป็นสีแดง */
+            color: red;
             white-space: nowrap;
-            position: absolute;
-            right: -100%;
             animation: marquee 8s linear infinite;
         }
 
@@ -171,9 +174,11 @@
     <h2 class="header">
         <img src="https://pro602.github.io/stockup/images/logo.png" class="logo fa-bounce" alt="Logo"> ข้อมูลสินค้าคงคลัง STOCK ON HAND
     </h2>
-            <p id="lastUpdated" class="marquee">
+<div class="marquee-container">
+        <p id="lastUpdated" class="marquee">
             ⏳ อัปเดตข้อมูล Formula ล่าสุด: 20/02/2025 13:24:00
         </p>
+    </div>
 
     <div class="filter-container">
         <select id="categorySelect">
