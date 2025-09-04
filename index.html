@@ -1,23 +1,16 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ตารางสินค้า - เลือกตามหมวดหมู่</title>
+    <title>ข้อมูลสินค้าคงคลัง STOCK ON HAND</title>
 
-    <!-- เชื่อมโยงกับ manifest.json -->
-    <link rel="manifest" href="/stockup/manifest.json">
-
-    <!-- เชื่อมโยงกับ favicon -->
-    <link rel="icon" href="favicon.ico?v=2">
-
-    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -26,8 +19,7 @@
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-
-    <!-- Font Awesome CDN -->
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 
     <style>
@@ -38,106 +30,24 @@
             padding: 20px;
             margin: 0;
         }
-        /* ปรับปรุง h2 */
-        
-        h2 {
-            color: #007BFF;
-            font-size: 42px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        /* คอนเทนเนอร์สำหรับฟิลเตอร์ */
-        
-        .filter-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        /* สไตล์ของ select */
-        
-        select {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #bbb;
-            background: #fff;
-            width: 200px;
-            cursor: pointer;
-        }
-        /* ปรับแต่งตาราง */
-        
-        table {
-            width: 100%;
-            margin-top: 10px;
-            border-collapse: collapse;
-        }
-        /* หัวตาราง */
-        
-        th {
-            background: #4CAF50;
-            color: white;
-            padding: 12px;
-            text-align: left;
-        }
-        /* ช่องข้อมูล */
-        
-        th,
-        td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        /* ปรับแต่งปุ่ม DataTables */
-        
-        .dt-buttons {
-            margin-bottom: 10px;
-        }
-        /* //ไฮไล์ row table */
-        
-        table.dataTable tbody tr:hover {
-            background-color: #77fd29 !important;
-            cursor: pointer;
-        }
-        /* Responsive Design */
-        
-        @media (max-width: 768px) {
-            select {
-                width: 100%;
-            }
-            table {
-                font-size: 14px;
-            }
-            th,
-            td {
-                padding: 8px;
-            }
-        }
-        
+
         .header {
             display: flex;
             align-items: center;
-            /* จัดแนวโลโก้และข้อความให้อยู่กลางแนวตั้ง */
             justify-content: center;
-            /* จัดให้ทั้งโลโก้และข้อความอยู่กลางแนวนอน */
             font-size: 24px;
-            /* กำหนดขนาดตัวอักษร */
             font-weight: bold;
             text-align: center;
             gap: 10px;
-            /* เพิ่มระยะห่างระหว่างโลโก้กับข้อความ */
         }
-        
+
         .logo {
             width: 80px;
-            /* ขนาดโลโก้ */
             height: auto;
-            /* ปรับอัตโนมัติให้มีอัตราส่วนที่ถูกต้อง */
         }
-/* คอนเทนเนอร์สำหรับข้อความที่วิ่ง */
-       .marquee-container {
-            width: 60%; /* ลดขนาดให้พอดีกับข้อความ */
+
+        .marquee-container {
+            width: 60%;
             overflow: hidden;
             white-space: nowrap;
             display: flex;
@@ -146,10 +56,9 @@
             background: rgba(255, 255, 255, 0.7);
             padding: 5px 10px;
             border-radius: 10px;
-            margin: 10px auto; /* จัดให้อยู่ตรงกลาง */
+            margin: 10px auto;
         }
 
-        /* ข้อความวิ่งจากขวามาซ้าย */
         .marquee {
             display: inline-block;
             font-size: 18px;
@@ -160,24 +69,73 @@
         }
 
         @keyframes marquee {
-            from {
-                transform: translateX(100%);
+            from { transform: translateX(100%); }
+            to { transform: translateX(-100%); }
+        }
+
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            background: #fff;
+            width: 200px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #4CAF50;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table.dataTable tbody tr:hover {
+            background-color: #77fd29 !important;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            select {
+                width: 100%;
             }
-            to {
-                transform: translateX(-100%);
+            table {
+                font-size: 14px;
+            }
+            th, td {
+                padding: 8px;
             }
         }
     </style>
 </head>
-
 <body>
 
     <h2 class="header">
         <img src="https://pro602.github.io/stockup/images/logo.png" class="logo fa-bounce" alt="Logo"> ข้อมูลสินค้าคงคลัง STOCK ON HAND
     </h2>
-<div class="marquee-container">
+    <div class="marquee-container">
         <p id="lastUpdated" class="marquee">
-            ⏳ อัปเดตข้อมูล Formula ล่าสุด: 20/02/2025 13:24:00
+            ⏳ อัปเดตข้อมูล Formula ล่าสุด: 09/04/2025 14:34:00
         </p>
     </div>
 
@@ -189,7 +147,7 @@
             <option value="">-- เลือกประเภท --</option>
         </select>
     </div>
-
+    
     <table id="productTable" class="display nowrap responsive" style="width:100%">
         <thead>
             <tr>
@@ -217,33 +175,22 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log("📌 ข้อมูลที่ได้จาก API:", data);
-
-                    // ดึงค่า datetime จากข้อมูลแรก
                     const rawDatetime = data.length > 0 ? data[0]["datetime"] : null;
-
-                    // ถ้ามีค่า datetime ให้นำมาปรับรูปแบบ
                     let formattedDatetime = "ไม่พบข้อมูลอัปเดตล่าสุด";
                     if (rawDatetime) {
-                        // แปลง datetime ที่ได้จาก API
                         const dateObj = new Date(rawDatetime);
-
-                        // ดึงค่าต่างๆ
                         const day = String(dateObj.getDate()).padStart(2, '0');
                         const month = String(dateObj.getMonth() + 1).padStart(2, '0');
                         const year = dateObj.getFullYear();
                         const hours = String(dateObj.getHours()).padStart(2, '0');
                         const minutes = String(dateObj.getMinutes()).padStart(2, '0');
                         const seconds = String(dateObj.getSeconds()).padStart(2, '0');
-
-                        // สร้างรูปแบบใหม่เป็น dd/mm/yyyy hh:mm:ss
                         formattedDatetime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
                     }
-
-                    // แสดงวันที่และเวลาในรูปแบบ dd/mm/yyyy hh:mm:ss
                     document.getElementById("lastUpdated").textContent = `⏳ อัปเดตข้อมูลFomulaล่าสุด: ${formattedDatetime}`;
-
                     dataStore = data;
-                    updateFilters();
+                    updateCategoryFilter();
+                    updateTypeFilter();
                     populateTable(data);
                 })
                 .catch(error => {
@@ -252,24 +199,31 @@
                 });
         }
 
-
-        function updateFilters() {
+        function updateCategoryFilter() {
             const categorySelect = document.getElementById("categorySelect");
-            const typeSelect = document.getElementById("typeSelect");
+            const categories = [...new Set(dataStore.map(row => row["Category"]).filter(Boolean))];
 
             categorySelect.innerHTML = `<option value="">-- เลือกหมวดหมู่ --</option>`;
-            typeSelect.innerHTML = `<option value="">-- เลือกประเภท --</option>`;
-
-            const categories = [...new Set(dataStore.map(row => row["Category"]).filter(Boolean))];
-            const types = [...new Set(dataStore.map(row => row["ประเภท"]).filter(Boolean))];
-
             categories.forEach(category => {
                 let option = document.createElement("option");
                 option.value = category;
                 option.textContent = category;
                 categorySelect.appendChild(option);
             });
+        }
 
+        function updateTypeFilter(selectedCategory) {
+            const typeSelect = document.getElementById("typeSelect");
+            let types = [];
+
+            if (selectedCategory) {
+                const filteredData = dataStore.filter(row => row["Category"] === selectedCategory);
+                types = [...new Set(filteredData.map(row => row["ประเภท"]).filter(Boolean))];
+            } else {
+                types = [...new Set(dataStore.map(row => row["ประเภท"]).filter(Boolean))];
+            }
+
+            typeSelect.innerHTML = `<option value="">-- เลือกประเภท --</option>`;
             types.forEach(type => {
                 let option = document.createElement("option");
                 option.value = type;
@@ -304,9 +258,7 @@
                 pageLength: 10,
                 ordering: true,
                 searching: true,
-                order: [
-                    [0, 'desc']
-                ],
+                order: [[0, 'desc']],
                 language: {
                     'search': '<i class="fa-solid fa-magnifying-glass"></i> ค้นหา:',
                     'lengthMenu': 'แสดง _MENU_ รายการต่อหน้า',
@@ -324,9 +276,7 @@
                     [10, 25, 50, 'All']
                 ],
                 destroy: true,
-                dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>' +
-                    '<"row"<"col-sm-12"tr>>' +
-                    '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-5"l><"col-sm-12 col-md-2"p>>',
+                dom: '<"top"Blf>rt<"bottom"ip><"clear">',
                 buttons: [{
                     extend: 'copy',
                     text: '📋 copy',
@@ -350,6 +300,8 @@
         function applyFilters() {
             const selectedCategory = document.getElementById("categorySelect").value;
             const selectedType = document.getElementById("typeSelect").value;
+            
+            updateTypeFilter(selectedCategory);
 
             let filteredData = dataStore;
 
@@ -368,9 +320,7 @@
         document.getElementById("typeSelect").addEventListener("change", applyFilters);
 
         loadSheetData();
-        setInterval(loadSheetData, 90000); // 90,000 มิลลิวินาที = 1 นาที 30 วินาที
+        setInterval(loadSheetData, 90000);
     </script>
-
 </body>
-
 </html>
